@@ -5,6 +5,8 @@ Vue.use(Vuex);
 import moment from 'moment-timezone';
 moment.tz.setDefault('UTC'); //this is important to have time consistency across the world
 
+import Axios from 'axios';
+
 export default new Vuex.Store({
     //state properties
     state: {
@@ -13,13 +15,8 @@ export default new Vuex.Store({
         eventFormPosX: 0,
         eventFormPosY: 0,
         eventFormActive: false,
-        events:
-            [
-                { description: 'Random event 1', date: moment('2018-09-12', 'YYYY-MM-DD') },
-                { description: 'Random event 2', date: moment('2018-09-13', 'YYYY-MM-DD') },
-                { description: 'Random event 3', date: moment('2018-10-16', 'YYYY-MM-DD') }
-            ],
-        eventFormDate: null,
+        eventFormDate: moment(),
+        events: []
     },
     mutations: {
         setCurrentMonth(state, payload) { //mutations always have these two properties
@@ -36,13 +33,29 @@ export default new Vuex.Store({
             state.eventFormActive = payload;
         },
         addEvent(state, payload) {
-            state.events.push({
-                description: payload,
-                date: state.eventFormDate
-            })
+            state.events.push(payload);
         },
         eventFormDate(state, payload) {
             state.eventFormDate = payload;
+        }
+    },
+    actions: {
+        addEvent(context, payload) { //actions always have these two properties. Context is whole store (actions need access to state and mutations)
+            return new Promise((resolve, reject) => {
+                let obj = {
+                    description: payload,
+                    date: context.state.eventFormDate
+                }
+                context.commit('addEvent', obj)
+                Axios.post('/add_event', obj).then(response => {
+                    if (response.status === 200) {
+                        context.commit('addEvent, obj');
+                        resolve(); //everything works, return resolve()
+                    } else {
+                        reject(); //some problem, return reject()
+                    }
+                })
+            }); //with an action you can return a promise
         }
     }
 })

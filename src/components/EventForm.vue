@@ -1,8 +1,9 @@
 <template>
 <div id='event-form' :class='{ active: active }' :style="{ top: top, left: left }">
 <h4>Add an event</h4>
+<p>{{ date.format('dddd, MMM. Do') }}</p>
 <div class='text'>
-    <input type='text' v-model='description' />
+    <input type='text' v-focus v-model='description' placeholder="Dinner at Nacho's" @keyup.enter='create'/>
     </div>
     <div class='buttons'>
         <button @click='create'>Create</button>
@@ -24,10 +25,21 @@ export default {
             this.$store.commit('eventFormActive', false);
         },
         create() {
-            this.$store.commit('addEvent', this.description)
+            if (this.description.length > 0) {
+            this.$store.dispatch('addEvent', this.description).then(_ => { //since this function returns a promise...
+                //clear desc and clear form only when promise resolves:
+            this.description = '';
+            this.$store.commit('eventFormActive', false);
+
+            })
+            }
         }
     },
     computed: {
+        date() {
+            return this.$store.state.eventFormDate;
+        },
+
         active() {
             return this.$store.state.eventFormActive
         },
@@ -37,10 +49,16 @@ export default {
         }, 
         left() {
             return `${this.$store.state.eventFormPosX}px`;
-
-
+        }
+    }, 
+    directives: {
+        focus: {
+            update(el) {
+                el.focus();
+            }
         }
     }
+    
 }
 
 </script>

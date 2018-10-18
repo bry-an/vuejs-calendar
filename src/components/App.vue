@@ -2,6 +2,7 @@
 <div>
   <div id='header'>
     <div>
+      <img src='../assets/logo.png'>
       <h1>Bry-Cal</h1>
     </div>
     <div>
@@ -47,7 +48,7 @@ export default {
       do {
         days.push(currentDay);
         currentDay = this.$moment(currentDay).add(1, "days");
-      } while ((currentDay.month()) + 1 === this.month);
+      } while ((currentDay.month() + 1) === this.month);
 
       //add previous days to start
       currentDay = this.$moment(days[0]);
