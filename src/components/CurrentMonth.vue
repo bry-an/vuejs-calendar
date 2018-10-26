@@ -1,8 +1,8 @@
 <template>
 <div>
 <div>{{ formattedDate }}</div>
-<button @click='dec'>-</button>
-<button @click='inc'>+</button>
+<button @click='dec'>prev</button>
+<button @click='inc'>next</button>
 
 </div>
 </template>
@@ -30,7 +30,7 @@ export default {
       } else {
         this.$store.commit("setCurrentMonth", this.month - 1);
       }
-      this.$store.commit('eventFormActive', false);
+      this.$store.commit("eventFormActive", false);
     },
     inc() {
       if (this.month == 12) {
@@ -39,7 +39,7 @@ export default {
       } else {
         this.$store.commit("setCurrentMonth", this.month + 1);
       }
-      this.$store.commit('eventFormActive', false);
+      this.$store.commit("eventFormActive", false);
     }
   }
 };

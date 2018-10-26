@@ -7,11 +7,13 @@ moment.tz.setDefault('UTC'); //this is important to have time consistency across
 
 import Axios from 'axios';
 
+const currentMonth = moment().format('MM')
+const currentYear = moment().format('YYYY')
 export default new Vuex.Store({
     //state properties
     state: {
         currentYear: 2018,
-        currentMonth: 9,
+        currentMonth: 10,
         eventFormPosX: 0,
         eventFormPosY: 0,
         eventFormActive: false,
